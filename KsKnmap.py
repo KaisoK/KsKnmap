@@ -1,44 +1,55 @@
 from multiprocessing import Process, Queue
-import socks
-import socket
-import subprocess
-import requests
+from datetime import datetime
+import socks, socket, subprocess, requests, pyfiglet, sys
 
-x = open("/home/kaisok/Documentos/Python/Onion/ListaPrueba", "r", encoding="latin-1")
-url = x.readlines()
-x.close()
 subprocess.run("clear")
 
+ascii_banner = pyfiglet.figlet_format("KsKnmap")
 puertosAbiertos = []
+
+print(ascii_banner)
+url = input("IP to scan - ")
+print("-" * 50)
+print("Scanning Target: " + url)
+print("Scanning started at:" + str(datetime.now()))
+print("-" * 50)
+
 
 def torrente(min, max):
 
-    for i in url:
-        nombre = i.strip("\n")
-        i = i.split(" ")[1].strip("\n")
+    try:
 
         for puerto in range(min, max):
-            print("\nProbando puerto {}".format(puerto))
 
-            try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(2)
+            address = (url, puerto)
+            s.connect(address)
+            q.put(puerto)
+            s.close()
 
-                socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050, True)
-                s = socks.socksocket()
-                s.settimeout(2)
-                address = (i, puerto)
-                s.connect(address)
-                
-                print("-----Abierto-----")
+            result = s.connect_ex((target,port))
 
-                q.put(puerto)
-                
+            if result == 0:
+                print("Port {} is open".format(port))
                 s.close()
                 
-            except:
+    except KeyboardInterrupt:
+        print("\n Exitting Program")
+        sys.exit()
 
-                print("casi")
+    except socket.gaierror:
+        print("\n Hostname Could Not Be Resolved")
+        sys.exit()
+
+    except socket.error:
+        print("\n Server not responding")
+        sys.exit()
+
+
 
 ListaPuertos=[1000, 1501, 2001, 2501, 3001]
+
 if __name__ == "__main__":
     
     procs = []
@@ -57,49 +68,3 @@ while not q.empty():
     puertosAbiertos.append(q.get())
 
 print(puertosAbiertos)
-
-for i in url:
-    nombre = i.strip("\n")
-    i = i.split(" ")[1].strip("\n")
-
-    for puerto in puertosAbiertos:
-        
-        try:
-            socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050, True)
-            s = socks.socksocket()
-            s.settimeout(2)
-            address = (i, puerto)
-            s.connect(address)
-            a = s.recv(1024).decode()
-            s.close()
-
-            if "SSH" in a:
-                    print("\n#######################")
-                    print("\n" + nombre)
-                    print("\nEs SSH")
-                    print("\n#######################")
-                    
-            elif "FTP" in a:
-                print("\n#######################")
-                print("\n" + nombre)
-                print("\nEs FTP")
-                print("\n#######################")
-
-        except:
-
-            try:
-
-                print("\n#######################")
-                proxies = {'http': 'socks5h://127.0.0.1:9050'}
-                data = requests.head("http://{}:{}".format(i, puerto),proxies=proxies).headers
-                if data["Server"]:
-                    print("\nHTTP SERVER: {}".format(data["Server"]))
-                else:
-                    print("\nHTTP SERVER")
-                print("\n#######################")
-
-            except:
-
-                print("\n#######################")
-                print("\nOTRO SERVICIO")
-                print("\n#######################")
