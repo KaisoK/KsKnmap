@@ -5,34 +5,33 @@ import socks, socket, subprocess, requests, pyfiglet, sys
 subprocess.run("clear")
 
 ascii_banner = pyfiglet.figlet_format("KsKnmap")
-puertosAbiertos = []
+OpenPorts = []
+t1 = datetime.now()
 
 print(ascii_banner)
 url = input("IP to scan - ")
-print("-" * 50)
+print("\n" + "-" * 50)
 print("Scanning Target: " + url)
-print("Scanning started at:" + str(datetime.now()))
+print("Scanning started at:" + str(t1))
 print("-" * 50)
 
 
-def torrente(min, max):
+def KsKnmap(min, max):
 
     try:
 
-        for puerto in range(min, max):
+        for port in range(min, max):
 
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(2)
-            address = (url, puerto)
-            s.connect(address)
-            q.put(puerto)
-            s.close()
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            socket.setdefaulttimeout(1)
 
-            result = s.connect_ex((target,port))
+            result = s.connect_ex((url,port))
 
             if result == 0:
                 print("Port {} is open".format(port))
-                s.close()
+                q.put(port)
+
+            s.close()
                 
     except KeyboardInterrupt:
         print("\n Exitting Program")
@@ -48,14 +47,14 @@ def torrente(min, max):
 
 
 
-ListaPuertos=[1000, 1501, 2001, 2501, 3001]
+PortsList = [1000, 1501, 2001, 2501, 3001]
 
 if __name__ == "__main__":
     
     procs = []
     q = Queue()
     for i in range(4):
-        proc = Process(target=torrente, args=(ListaPuertos[i],ListaPuertos[i+1]))
+        proc = Process(target=KsKnmap, args=(PortsList[i],PortsList[i+1]))
         procs.append(proc)
 
     for proc in procs:
@@ -65,6 +64,12 @@ if __name__ == "__main__":
         proc.join()
 
 while not q.empty():
-    puertosAbiertos.append(q.get())
+    OpenPorts.append(q.get())
 
-print(puertosAbiertos)
+t2 = datetime.now()
+TotalT = t2-t1
+
+print("\n" + "-" * 50)
+print(OpenPorts)
+print("\nScan completed in {}".format(TotalT))
+print("-" * 50)
