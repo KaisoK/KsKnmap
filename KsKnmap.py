@@ -13,7 +13,7 @@ url = input("IP to scan - ")
 print("\n" + "-" * 50)
 print("Scanning Target: " + url)
 print("Scanning started at:" + str(t1))
-print("-" * 50)
+print("-" * 50 + "\n")
 
 
 def KsKnmap(min, max):
@@ -23,7 +23,7 @@ def KsKnmap(min, max):
         for port in range(min, max):
 
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            socket.setdefaulttimeout(1)
+            socket.setdefaulttimeout(3)
 
             result = s.connect_ex((url,port))
 
@@ -45,9 +45,7 @@ def KsKnmap(min, max):
         print("\n Server not responding")
         sys.exit()
 
-
-
-PortsList = [1000, 1501, 2001, 2501, 3001]
+PortsList = [0, 16339, 32768, 49107, 65536]
 
 if __name__ == "__main__":
     
