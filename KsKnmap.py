@@ -20,7 +20,7 @@ def KsKnmap(min, max):
 
     try:
 
-        for port in range(min, max):
+        for port in range(0, 65536):
 
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             socket.setdefaulttimeout(3)
