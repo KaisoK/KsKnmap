@@ -48,8 +48,9 @@ def menu():
         global List
         global url
         url = input("IP to scan -> ")
-        nports = input("\nSelect ports to scan (Select an option between 1 and 4), (First 1000 ports = 1, TOP COMMON PORTS = 2, ALL ports = 3, Insert manually the ports to scan = 4) -> ")
-        
+        print("\nSelect ports to scan (Select an option between 1 and 4)\n\n1. First 1000 ports,\n2. TOP COMMON PORTS,\n3. ALL ports,\n4. Insert manually the ports to scan\n")
+        nports = input("-> ")
+
         if nports == "1":
             List = [0, 251, 501, 751, 1001]
 
@@ -61,8 +62,14 @@ def menu():
 
         elif nports == "4":
             List = []
-            manual = input("\nInsert the ports to scan separed by , -> ")
-            
+            print("\nInsert the ports to scan separed by [,] ")
+            manual = input("\n-> ").split(",")
+            List2 = manual
+            for i in range(len(List2)):
+                t = int(List2[i])
+                List.append(t)
+            print(List)
+
         else:
             print("Please insert a valid option")
 
