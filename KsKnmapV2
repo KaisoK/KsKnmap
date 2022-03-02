@@ -48,7 +48,7 @@ def menu():
         global List
         global url
         url = input("IP to scan -> ")
-        print("\nSelect ports to scan (Select an option between 1 and 4)\n\n1. First 1000 ports,\n2. TOP COMMON PORTS,\n3. ALL ports,\n4. Insert manually the ports to scan\n")
+        print("\nSelect ports to scan (Select an option between 1 and 4)\n\n1. First 1000 ports\n2. TOP COMMON PORTS\n3. ALL ports\n4. Insert manually the ports to scan\n")
         nports = input("-> ")
 
         if nports == "1":
